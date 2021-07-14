@@ -75,7 +75,7 @@ object ChessTour extends App {
   println(solve(Pos(4, 3)))
 }
 
-object ChessTour2 extends App {
+object ChessTour3X3 extends App {
 
   case class Pos(i: Int, j: Int)
 
