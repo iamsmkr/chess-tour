@@ -10,19 +10,19 @@ object ChessTour extends App {
 
   val allPos = for {x <- 0 until 10; y <- 0 until 10} yield Pos(x, y)
 
-  def getPossiblePos(currPos: Pos): List[Pos] = {
-    val Pos(i, j) = currPos
-
-    List(
-      Pos(i - 2, j - 2), Pos(i - 3, j), Pos(i - 2, j + 2),
-      Pos(i, j - 3), Pos(i, j + 3),
-      Pos(i + 2, j - 2), Pos(i + 3, j), Pos(i + 2, j + 2)
-    ).filter { case Pos(x, y) =>
-      x >= 0 && x <= 9 && y >= 0 && y <= 9
-    }
-  }
-
   def solve(currPos: Pos): List[Pos] = {
+
+    def getPossiblePos(currPos: Pos): List[Pos] = {
+      val Pos(i, j) = currPos
+
+      List(
+        Pos(i - 2, j - 2), Pos(i - 3, j), Pos(i - 2, j + 2),
+        Pos(i, j - 3), Pos(i, j + 3),
+        Pos(i + 2, j - 2), Pos(i + 3, j), Pos(i + 2, j + 2)
+      ).filter { case Pos(x, y) =>
+        x >= 0 && x <= 9 && y >= 0 && y <= 9
+      }
+    }
 
     @tailrec
     def getStatsWithOtherPossiblePos(stats: List[Stats]): List[Stats] = {
@@ -83,19 +83,19 @@ object ChessTour3X3 extends App {
 
   val allPos = for {x <- 0 until 3; y <- 0 until 3} yield Pos(x, y)
 
-  def getPossiblePos(currPos: Pos): List[Pos] = {
-    val Pos(i, j) = currPos
-
-    List(
-      Pos(i - 1, j - 1), Pos(i - 1, j), Pos(i - 1, j + 1),
-      Pos(i, j - 1), Pos(i, j + 1),
-      Pos(i + 1, j - 1), Pos(i + 1, j), Pos(i + 1, j + 1)
-    ).filter { case Pos(x, y) =>
-      x >= 0 && x <= 2 && y >= 0 && y <= 2
-    }
-  }
-
   def solve(currPos: Pos): List[Pos] = {
+
+    def getPossiblePos(currPos: Pos): List[Pos] = {
+      val Pos(i, j) = currPos
+
+      List(
+        Pos(i - 1, j - 1), Pos(i - 1, j), Pos(i - 1, j + 1),
+        Pos(i, j - 1), Pos(i, j + 1),
+        Pos(i + 1, j - 1), Pos(i + 1, j), Pos(i + 1, j + 1)
+      ).filter { case Pos(x, y) =>
+        x >= 0 && x <= 2 && y >= 0 && y <= 2
+      }
+    }
 
     @tailrec
     def getStatsWithOtherPossiblePos(stats: List[Stats]): List[Stats] = {
