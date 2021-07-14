@@ -2,7 +2,10 @@ package com.iamsmkr.chesstour.backtracking
 
 import scala.annotation.tailrec
 
-object ChessTour extends App {
+// Simplified problem statement for ease of implementation and testing.
+// Same implementation could be extended to chess boards of higher dimensions.
+
+object ChessTour3X3 extends App {
 
   case class Pos(i: Int, j: Int)
 
@@ -10,17 +13,17 @@ object ChessTour extends App {
 
   def solve(currPos: Pos): List[Pos] = {
 
-    val allPos = for {x <- 0 until 10; y <- 0 until 10} yield Pos(x, y)
+    val allPos = for {x <- 0 until 3; y <- 0 until 3} yield Pos(x, y)
 
     def getPossiblePos(currPos: Pos): List[Pos] = {
       val Pos(i, j) = currPos
 
       List(
-        Pos(i - 2, j - 2), Pos(i - 3, j), Pos(i - 2, j + 2),
-        Pos(i, j - 3), Pos(i, j + 3),
-        Pos(i + 2, j - 2), Pos(i + 3, j), Pos(i + 2, j + 2)
+        Pos(i - 1, j - 1), Pos(i - 1, j), Pos(i - 1, j + 1),
+        Pos(i, j - 1), Pos(i, j + 1),
+        Pos(i + 1, j - 1), Pos(i + 1, j), Pos(i + 1, j + 1)
       ).filter { case Pos(x, y) =>
-        x >= 0 && x <= 9 && y >= 0 && y <= 9
+        x >= 0 && x <= 2 && y >= 0 && y <= 2
       }
     }
 
@@ -40,7 +43,7 @@ object ChessTour extends App {
     def compute(stats: List[Stats]): List[Pos] = {
       val currStats = stats.head
 
-      if ((allPos diff currStats.alreadyVisitedPos).isEmpty) currStats.alreadyVisitedPos
+      if ((allPos diff currStats.alreadyVisitedPos).isEmpty) currStats.alreadyVisitedPos.reverse
       else {
         if (currStats.maybeNextPossiblePos.isDefined) {
           val nextPos = currStats.maybeNextPossiblePos.get
@@ -72,6 +75,4 @@ object ChessTour extends App {
     compute(stats)
   }
 
-  // This won't terminate
-  // solve(Pos(4, 3))
 }
