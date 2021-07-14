@@ -8,7 +8,7 @@ object ChessTour extends App {
 
   case class Stats(alreadyVisitedPos: List[Pos], maybeNextPossiblePos: Option[Pos], otherPossiblePos: List[Pos])
 
-  val allPos = (for {x <- 0 until 10; y <- 0 until 10} yield Pos(x, y))
+  val allPos = for {x <- 0 until 10; y <- 0 until 10} yield Pos(x, y)
 
   def getPossiblePos(currPos: Pos): List[Pos] = {
     val Pos(i, j) = currPos
@@ -81,7 +81,7 @@ object ChessTour3X3 extends App {
 
   case class Stats(alreadyVisitedPos: List[Pos], maybeNextPossiblePos: Option[Pos], otherPossiblePos: List[Pos])
 
-  val allPos = (for {x <- 0 until 3; y <- 0 until 3} yield Pos(x, y))
+  val allPos = for {x <- 0 until 3; y <- 0 until 3} yield Pos(x, y)
 
   def getPossiblePos(currPos: Pos): List[Pos] = {
     val Pos(i, j) = currPos
