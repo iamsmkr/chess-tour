@@ -76,6 +76,9 @@ object ChessTour extends App {
   // println(solve(Pos(4, 3)))
 }
 
+// Simplified problem statement for ease of implementation and testing.
+// Same implementation could be extended to chess boards of higher dimensions.
+
 object ChessTour3X3 extends App {
 
   case class Pos(i: Int, j: Int)
