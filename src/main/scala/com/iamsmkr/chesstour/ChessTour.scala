@@ -113,7 +113,7 @@ object ChessTour3X3 extends App {
     def compute(stats: List[Stats]): List[Pos] = {
       val currStats = stats.head
 
-      if ((allPos diff currStats.alreadyVisitedPos).isEmpty) currStats.alreadyVisitedPos
+      if ((allPos diff currStats.alreadyVisitedPos).isEmpty) currStats.alreadyVisitedPos.reverse
       else {
         if (currStats.maybeNextPossiblePos.isDefined) {
           val nextPos = currStats.maybeNextPossiblePos.get
@@ -145,8 +145,8 @@ object ChessTour3X3 extends App {
     compute(stats)
   }
 
-  assert(solve(Pos(0, 0)) == List(Pos(2,2), Pos(1,2), Pos(2,1), Pos(2,0), Pos(1,0), Pos(1,1), Pos(0,2), Pos(0,1), Pos(0,0)))
-  assert(solve(Pos(1, 1)) == List(Pos(2,0), Pos(1,0), Pos(2,1), Pos(2,2), Pos(1,2), Pos(0,2), Pos(0,1), Pos(0,0), Pos(1,1)))
-  assert(solve(Pos(2, 2)) == List(Pos(2,0), Pos(1,0), Pos(2,1), Pos(1,2), Pos(0,2), Pos(0,1), Pos(0,0), Pos(1,1), Pos(2,2)))
-  assert(solve(Pos(2, 0)) == List(Pos(2,2), Pos(2,1), Pos(1,2), Pos(1,1), Pos(0,2), Pos(0,1), Pos(0,0), Pos(1,0), Pos(2,0)))
+  assert(solve(Pos(0, 0)) == List(Pos(0,0), Pos(0,1), Pos(0,2), Pos(1,1), Pos(1,0), Pos(2,0), Pos(2,1), Pos(1,2), Pos(2,2)))
+  assert(solve(Pos(1, 1)) == List(Pos(1,1), Pos(0,0), Pos(0,1), Pos(0,2), Pos(1,2), Pos(2,2), Pos(2,1), Pos(1,0), Pos(2,0)))
+  assert(solve(Pos(2, 2)) == List(Pos(2,2), Pos(1,1), Pos(0,0), Pos(0,1), Pos(0,2), Pos(1,2), Pos(2,1), Pos(1,0), Pos(2,0)))
+  assert(solve(Pos(2, 0)) == List(Pos(2,0), Pos(1,0), Pos(0,0), Pos(0,1), Pos(0,2), Pos(1,1), Pos(1,2), Pos(2,1), Pos(2,2)))
 }
