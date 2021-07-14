@@ -8,6 +8,8 @@ object ChessTour extends App {
 
   case class Pos(i: Int, j: Int)
 
+  // Stats hold relevent information to facilitate tail recursive backtracking for every position in a given board.
+
   case class Stats(alreadyVisitedPos: List[Pos], maybeNextPossiblePos: Option[Pos], otherPossiblePos: List[Pos])
 
   val ALL_POS = for {x <- 0 until 10; y <- 0 until 10} yield Pos(x, y)
@@ -26,7 +28,10 @@ object ChessTour extends App {
       }
     }
 
-    def getNextPossiblePosWithLeastFurtherPossiblePos(nextPossiblePos: List[Pos], alreadyVisitedPos: List[Pos]): (Option[Pos], List[Pos]) = {
+    // Get next possible position with least further possible positions available to move to out of all next available
+    // possible positions.
+
+    def getNextPossiblePos(nextPossiblePos: List[Pos], alreadyVisitedPos: List[Pos]): (Option[Pos], List[Pos]) = {
       if (nextPossiblePos.isEmpty) return (None, Nil)
 
       val leastPos = nextPossiblePos.map { n => (n, getPossiblePos(n) diff alreadyVisitedPos) }.minBy { case (_, p) => p.size }
@@ -37,12 +42,15 @@ object ChessTour extends App {
       (maybeNextPossiblePos, otherPossiblePos)
     }
 
+    // Get last stats in the stack that has non empty other possible positions to move to because there is no way to continue
+    // further with empty other possible positions.
+
     @tailrec
-    def getLastStatsWithNonEmptyOtherPossiblePos(stats: List[Stats]): List[Stats] = {
-      if (stats.head.otherPossiblePos.isEmpty) getLastStatsWithNonEmptyOtherPossiblePos(stats.tail) else {
+    def getLastStats(stats: List[Stats]): List[Stats] = {
+      if (stats.head.otherPossiblePos.isEmpty) getLastStats(stats.tail) else {
 
         val Stats(alreadyVisitedPos, _, _otherPossiblePos) = stats.head
-        val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePosWithLeastFurtherPossiblePos(_otherPossiblePos, alreadyVisitedPos)
+        val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePos(_otherPossiblePos, alreadyVisitedPos)
 
         Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos) :: stats.tail
       }
@@ -50,32 +58,35 @@ object ChessTour extends App {
 
     @tailrec
     def compute(stats: List[Stats]): List[Pos] = {
-      val currStats = stats.head
-
-      if ((ALL_POS diff currStats.alreadyVisitedPos).isEmpty) currStats.alreadyVisitedPos.reverse
+      if (stats.isEmpty) Nil
       else {
-        if (currStats.maybeNextPossiblePos.isDefined) {
-          val nextPos = currStats.maybeNextPossiblePos.get
+        val currStats = stats.head
 
-          val alreadyVisitedPos = nextPos :: currStats.alreadyVisitedPos
-          val possiblePos = getPossiblePos(nextPos) diff alreadyVisitedPos
-          val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePosWithLeastFurtherPossiblePos(possiblePos, alreadyVisitedPos)
+        val unvisitedPos = ALL_POS diff currStats.alreadyVisitedPos
 
-          val newStats = Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos)
-          compute(newStats :: stats)
-        } else compute(getLastStatsWithNonEmptyOtherPossiblePos(stats.tail))
+        if (unvisitedPos.isEmpty) currStats.alreadyVisitedPos.reverse
+        else {
+          if (currStats.maybeNextPossiblePos.isDefined) {
+            val nextPos = currStats.maybeNextPossiblePos.get
+
+            val alreadyVisitedPos = nextPos :: currStats.alreadyVisitedPos
+            val possiblePos = getPossiblePos(nextPos) diff alreadyVisitedPos
+            val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePos(possiblePos, alreadyVisitedPos)
+
+            val newStats = Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos)
+            compute(newStats :: stats)
+          } else compute(getLastStats(stats.tail))
+        }
       }
     }
 
     val possiblePos = getPossiblePos(currPos)
     val alreadyVisitedPos = List(currPos)
-    val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePosWithLeastFurtherPossiblePos(possiblePos, alreadyVisitedPos)
+    val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePos(possiblePos, alreadyVisitedPos)
 
     val stats = List(Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos))
     compute(stats)
   }
-
-  //  println(solve(Pos(4, 3)))
 
   assert(
     solve(Pos(4, 3)) ==
@@ -99,6 +110,8 @@ object ChessTour3X3 extends App {
 
   case class Pos(i: Int, j: Int)
 
+  // Stats hold relevent information to facilitate tail recursive backtracking for every position in a given board.
+
   case class Stats(alreadyVisitedPos: List[Pos], maybeNextPossiblePos: Option[Pos], otherPossiblePos: List[Pos])
 
   val ALL_POS = for {x <- 0 until 3; y <- 0 until 3} yield Pos(x, y)
@@ -117,7 +130,10 @@ object ChessTour3X3 extends App {
       }
     }
 
-    def getNextPossiblePosWithLeastFurtherPossiblePos(nextPossiblePos: List[Pos], alreadyVisitedPos: List[Pos]): (Option[Pos], List[Pos]) = {
+    // Get next possible position with least further possible positions available to move to out of all next available
+    // possible positions.
+
+    def getNextPossiblePos(nextPossiblePos: List[Pos], alreadyVisitedPos: List[Pos]): (Option[Pos], List[Pos]) = {
       if (nextPossiblePos.isEmpty) return (None, Nil)
 
       val leastPos = nextPossiblePos.map { n => (n, getPossiblePos(n) diff alreadyVisitedPos) }.minBy { case (_, p) => p.size }
@@ -128,12 +144,15 @@ object ChessTour3X3 extends App {
       (maybeNextPossiblePos, otherPossiblePos)
     }
 
+    // Get last stats in the stack that has non empty other possible positions to move to because there is no way to continue
+    // further with empty other possible positions.
+
     @tailrec
-    def getLastStatsWithNonEmptyOtherPossiblePos(stats: List[Stats]): List[Stats] = {
-      if (stats.head.otherPossiblePos.isEmpty) getLastStatsWithNonEmptyOtherPossiblePos(stats.tail) else {
+    def getLastStats(stats: List[Stats]): List[Stats] = {
+      if (stats.head.otherPossiblePos.isEmpty) getLastStats(stats.tail) else {
 
         val Stats(alreadyVisitedPos, _, _otherPossiblePos) = stats.head
-        val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePosWithLeastFurtherPossiblePos(_otherPossiblePos, alreadyVisitedPos)
+        val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePos(_otherPossiblePos, alreadyVisitedPos)
 
         Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos) :: stats.tail
       }
@@ -141,26 +160,31 @@ object ChessTour3X3 extends App {
 
     @tailrec
     def compute(stats: List[Stats]): List[Pos] = {
-      val currStats = stats.head
-
-      if ((ALL_POS diff currStats.alreadyVisitedPos).isEmpty) currStats.alreadyVisitedPos.reverse
+      if (stats.isEmpty) Nil
       else {
-        if (currStats.maybeNextPossiblePos.isDefined) {
-          val nextPos = currStats.maybeNextPossiblePos.get
+        val currStats = stats.head
 
-          val alreadyVisitedPos = nextPos :: currStats.alreadyVisitedPos
-          val possiblePos = getPossiblePos(nextPos) diff alreadyVisitedPos
-          val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePosWithLeastFurtherPossiblePos(possiblePos, alreadyVisitedPos)
+        val unvisitedPos = ALL_POS diff currStats.alreadyVisitedPos
 
-          val newStats = Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos)
-          compute(newStats :: stats)
-        } else compute(getLastStatsWithNonEmptyOtherPossiblePos(stats.tail))
+        if (unvisitedPos.isEmpty) currStats.alreadyVisitedPos.reverse
+        else {
+          if (currStats.maybeNextPossiblePos.isDefined) {
+            val nextPos = currStats.maybeNextPossiblePos.get
+
+            val alreadyVisitedPos = nextPos :: currStats.alreadyVisitedPos
+            val possiblePos = getPossiblePos(nextPos) diff alreadyVisitedPos
+            val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePos(possiblePos, alreadyVisitedPos)
+
+            val newStats = Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos)
+            compute(newStats :: stats)
+          } else compute(getLastStats(stats.tail))
+        }
       }
     }
 
     val possiblePos = getPossiblePos(currPos)
     val alreadyVisitedPos = List(currPos)
-    val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePosWithLeastFurtherPossiblePos(possiblePos, alreadyVisitedPos)
+    val (maybeNextPossiblePos, otherPossiblePos) = getNextPossiblePos(possiblePos, alreadyVisitedPos)
 
     val stats = List(Stats(alreadyVisitedPos, maybeNextPossiblePos, otherPossiblePos))
     compute(stats)
