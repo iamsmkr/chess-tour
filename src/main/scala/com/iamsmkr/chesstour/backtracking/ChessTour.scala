@@ -8,9 +8,9 @@ object ChessTour extends App {
 
   case class Stats(alreadyVisitedPos: List[Pos], maybeNextPossiblePos: Option[Pos], otherPossiblePos: List[Pos])
 
-  val allPos = for {x <- 0 until 10; y <- 0 until 10} yield Pos(x, y)
-
   def solve(currPos: Pos): List[Pos] = {
+
+    val allPos = for {x <- 0 until 10; y <- 0 until 10} yield Pos(x, y)
 
     def getPossiblePos(currPos: Pos): List[Pos] = {
       val Pos(i, j) = currPos
@@ -73,7 +73,7 @@ object ChessTour extends App {
   }
 
   // This won't terminate
-  // println(solve(Pos(4, 3)))
+  // solve(Pos(4, 3))
 }
 
 // Simplified problem statement for ease of implementation and testing.
@@ -85,9 +85,9 @@ object ChessTour3X3 extends App {
 
   case class Stats(alreadyVisitedPos: List[Pos], maybeNextPossiblePos: Option[Pos], otherPossiblePos: List[Pos])
 
-  val allPos = for {x <- 0 until 3; y <- 0 until 3} yield Pos(x, y)
-
   def solve(currPos: Pos): List[Pos] = {
+
+    val allPos = for {x <- 0 until 3; y <- 0 until 3} yield Pos(x, y)
 
     def getPossiblePos(currPos: Pos): List[Pos] = {
       val Pos(i, j) = currPos
@@ -149,8 +149,4 @@ object ChessTour3X3 extends App {
     compute(stats)
   }
 
-  assert(solve(Pos(0, 0)) == List(Pos(0, 0), Pos(0, 1), Pos(0, 2), Pos(1, 1), Pos(1, 0), Pos(2, 0), Pos(2, 1), Pos(1, 2), Pos(2, 2)))
-  assert(solve(Pos(1, 1)) == List(Pos(1, 1), Pos(0, 0), Pos(0, 1), Pos(0, 2), Pos(1, 2), Pos(2, 2), Pos(2, 1), Pos(1, 0), Pos(2, 0)))
-  assert(solve(Pos(2, 2)) == List(Pos(2, 2), Pos(1, 1), Pos(0, 0), Pos(0, 1), Pos(0, 2), Pos(1, 2), Pos(2, 1), Pos(1, 0), Pos(2, 0)))
-  assert(solve(Pos(2, 0)) == List(Pos(2, 0), Pos(1, 0), Pos(0, 0), Pos(0, 1), Pos(0, 2), Pos(1, 1), Pos(1, 2), Pos(2, 1), Pos(2, 2)))
 }
